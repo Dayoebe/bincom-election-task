@@ -27,7 +27,16 @@
 
     body {
         background-color: var(--surface-base);
-        @apply text-slate-900 antialiased;
+        @apply overflow-x-hidden text-slate-900 antialiased;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    @media (max-width: 640px) {
+        input,
+        select,
+        textarea {
+            font-size: 16px;
+        }
     }
 
     ::selection {
@@ -45,22 +54,57 @@
     .animate__animated.animate__fast {
         --animate-duration: 520ms;
     }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        .animate__animated {
+            animation: none !important;
+        }
+    }
 }
 
 @layer components {
     .pattern-badge {
-        @apply inline-flex items-center rounded-full border-2 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em];
+        @apply inline-flex items-center rounded-full border-2 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] sm:text-xs sm:tracking-[0.24em];
     }
 
     .surface-note {
-        @apply rounded-[1.6rem] border-2 px-4 py-4 text-sm leading-6 shadow-sm;
+        @apply rounded-[1.25rem] border-2 px-4 py-4 text-sm leading-6 shadow-sm sm:rounded-[1.6rem];
     }
 
     .table-head-cell {
-        @apply px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-700;
+        @apply px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-700 sm:px-6 sm:py-4 sm:tracking-[0.18em];
     }
 
     .table-body-cell {
-        @apply px-6 py-4 text-sm text-slate-700;
+        @apply px-4 py-3 text-sm text-slate-700 sm:px-6 sm:py-4;
+    }
+
+    .mobile-tabbar {
+        padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+        @apply fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/96 backdrop-blur;
+    }
+
+    .mobile-tab-item {
+        @apply flex flex-col items-center justify-center rounded-[1.35rem] px-3 py-2.5 text-center transition;
+    }
+
+    .mobile-data-grid {
+        @apply grid grid-cols-2 gap-3;
+    }
+
+    .mobile-data-panel {
+        @apply rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3;
+    }
+
+    .mobile-label {
+        @apply text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500;
+    }
+
+    .mobile-value {
+        @apply mt-1 text-sm font-semibold text-slate-950;
     }
 }

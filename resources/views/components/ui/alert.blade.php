@@ -31,7 +31,7 @@
     x-show="open"
     x-cloak
     :class="leaving ? 'animate__fadeOutUp' : 'animate__fadeInDown'"
-    {{ $attributes->class('animate__animated rounded-[1.6rem] border-2 px-4 py-4 text-sm leading-6 shadow-sm shadow-slate-200/60 '.$styles) }}
+    {{ $attributes->class('animate__animated rounded-[1.25rem] border-2 px-4 py-4 text-sm leading-6 shadow-sm shadow-slate-200/60 sm:rounded-[1.6rem] '.$styles) }}
 >
     <div class="flex items-start gap-3">
         <span class="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-black {{ $iconStyles }}">

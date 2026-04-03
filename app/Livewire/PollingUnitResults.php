@@ -24,7 +24,16 @@ class PollingUnitResults extends Component
         if (! $this->repository()->legacySchemaIsAvailable()) {
             $this->legacySchemaReady = false;
             $this->legacySchemaMessage = 'Import bincom_test.sql into MySQL and refresh the page to load the polling unit records.';
+
+            return;
         }
+
+        $this->synchronizeSelectedPollingUnit();
+    }
+
+    public function updatedSearch(): void
+    {
+        $this->synchronizeSelectedPollingUnit();
     }
 
     public function render(): View
@@ -36,15 +45,6 @@ class PollingUnitResults extends Component
 
         if ($this->legacySchemaReady) {
             $pollingUnits = $this->repository()->searchablePollingUnits($this->search);
-
-            if ($pollingUnits->isEmpty()) {
-                $this->selectedPollingUnit = null;
-            } elseif (
-                blank($this->selectedPollingUnit)
-                || ! $pollingUnits->contains(fn ($unit): bool => (string) $unit->uniqueid === (string) $this->selectedPollingUnit)
-            ) {
-                $this->selectedPollingUnit = (string) $pollingUnits->first()->uniqueid;
-            }
 
             if (filled($this->selectedPollingUnit)) {
                 $pollingUnit = $this->repository()->pollingUnitDetails((int) $this->selectedPollingUnit);
@@ -69,5 +69,23 @@ class PollingUnitResults extends Component
     private function repository(): BincomElectionRepository
     {
         return app(BincomElectionRepository::class);
+    }
+
+    private function synchronizeSelectedPollingUnit(): void
+    {
+        $pollingUnits = $this->repository()->searchablePollingUnits($this->search);
+
+        if ($pollingUnits->isEmpty()) {
+            $this->selectedPollingUnit = null;
+
+            return;
+        }
+
+        if (
+            blank($this->selectedPollingUnit)
+            || ! $pollingUnits->contains(fn ($unit): bool => (string) $unit->uniqueid === (string) $this->selectedPollingUnit)
+        ) {
+            $this->selectedPollingUnit = (string) $pollingUnits->first()->uniqueid;
+        }
     }
 }

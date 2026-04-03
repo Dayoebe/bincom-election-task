@@ -26,12 +26,12 @@
     $accent = $accents[$tone] ?? $accents['white'];
 @endphp
 
-<x-ui.card :tone="$tone" {{ $attributes->class('p-5') }}>
+<x-ui.card :tone="$tone" {{ $attributes->class('p-4 sm:p-5') }}>
     <div class="flex items-center gap-3">
         <span class="inline-flex h-3.5 w-3.5 rounded-full {{ $accent['dot'] }}"></span>
         <p class="text-xs font-semibold uppercase tracking-[0.24em] {{ $accent['label'] }}">{{ $label }}</p>
     </div>
-    <p class="mt-4 text-3xl font-semibold tracking-tight text-slate-950">{{ $value }}</p>
+    <p class="mt-3 text-2xl font-semibold tracking-tight text-slate-950 sm:mt-4 sm:text-3xl">{{ $value }}</p>
     @if (trim((string) $slot) !== '')
         <div class="mt-3 text-sm leading-6 text-slate-700">
             {{ $slot }}

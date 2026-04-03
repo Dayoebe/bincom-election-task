@@ -22,6 +22,6 @@
     ];
 @endphp
 
-<div {{ $attributes->class('rounded-[2rem] border-2 backdrop-blur-sm shadow-[0_18px_45px_rgba(15,23,42,0.08)] '.($tones[$tone] ?? $tones['white'])) }}>
+<div {{ $attributes->class('rounded-[1.5rem] border-2 backdrop-blur-sm shadow-[0_18px_45px_rgba(15,23,42,0.08)] sm:rounded-[2rem] '.($tones[$tone] ?? $tones['white'])) }}>
     {{ $slot }}
 </div>

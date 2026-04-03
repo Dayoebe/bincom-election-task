@@ -42,20 +42,20 @@
             </x-ui.alert>
         @enderror
 
-        <div class="grid gap-4 md:grid-cols-3">
-            <x-ui.card tone="yellow" class="animate__animated animate__fadeInUp p-5" style="animation-fill-mode: both; animation-delay: 100ms;">
+        <div class="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+            <x-ui.card tone="yellow" class="animate__animated animate__fadeInUp p-4 sm:p-5" style="animation-fill-mode: both; animation-delay: 100ms;">
                 <p class="text-xs font-semibold uppercase tracking-[0.24em] text-yellow-700">Party fields</p>
                 <p class="mt-4 text-3xl font-semibold tracking-tight text-slate-950" x-text="partyCount"></p>
                 <p class="mt-3 text-sm leading-6 text-slate-700">Each party score is required before the form can be saved.</p>
             </x-ui.card>
 
-            <x-ui.card tone="emerald" class="animate__animated animate__fadeInUp p-5" style="animation-fill-mode: both; animation-delay: 160ms;">
+            <x-ui.card tone="emerald" class="animate__animated animate__fadeInUp p-4 sm:p-5" style="animation-fill-mode: both; animation-delay: 160ms;">
                 <p class="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700">Live score total</p>
                 <p class="mt-4 text-3xl font-semibold tracking-tight text-slate-950" x-text="partyTotal.toLocaleString()"></p>
                 <p class="mt-3 text-sm leading-6 text-slate-700">Alpine recalculates the combined party score as you type.</p>
             </x-ui.card>
 
-            <x-ui.card tone="violet" class="animate__animated animate__fadeInUp p-5" style="animation-fill-mode: both; animation-delay: 220ms;">
+            <x-ui.card tone="violet" class="animate__animated animate__fadeInUp p-4 sm:p-5 sm:col-span-2 lg:col-span-1" style="animation-fill-mode: both; animation-delay: 220ms;">
                 <p class="text-xs font-semibold uppercase tracking-[0.24em] text-violet-700">Entry flow</p>
                 <p class="mt-4 text-lg font-semibold tracking-tight text-slate-950">LGA → Ward → Polling Unit → Party Scores</p>
                 <p class="mt-3 text-sm leading-6 text-slate-700">The save action writes both tables inside a single transaction.</p>
@@ -65,7 +65,7 @@
         <form wire:submit="save" class="space-y-6">
             <div class="grid gap-6 xl:grid-cols-[minmax(0,1.2fr),minmax(0,0.8fr)]">
                 <div class="space-y-6">
-                    <x-ui.card tone="rose" class="animate__animated animate__fadeInLeft p-6" style="animation-fill-mode: both; animation-delay: 100ms;">
+                    <x-ui.card tone="rose" class="animate__animated animate__fadeInLeft p-5 sm:p-6" style="animation-fill-mode: both; animation-delay: 100ms;">
                         <div class="space-y-5">
                             <div>
                                 <h2 class="text-xl font-semibold text-slate-950">Polling Unit Details</h2>
@@ -160,7 +160,7 @@
                         </div>
                     </x-ui.card>
 
-                    <x-ui.card tone="teal" class="animate__animated animate__fadeInUp p-6" style="animation-fill-mode: both; animation-delay: 180ms;">
+                    <x-ui.card tone="teal" class="animate__animated animate__fadeInUp p-5 sm:p-6" style="animation-fill-mode: both; animation-delay: 180ms;">
                         <div class="space-y-5">
                             <div class="flex flex-wrap items-center justify-between gap-3">
                                 <div>
@@ -219,7 +219,7 @@
                     </x-ui.card>
                 </div>
 
-                <x-ui.card tone="amber" class="animate__animated animate__fadeInRight p-6" style="animation-fill-mode: both; animation-delay: 140ms;">
+                <x-ui.card tone="amber" class="animate__animated animate__fadeInRight p-5 sm:p-6" style="animation-fill-mode: both; animation-delay: 140ms;">
                     <div class="space-y-5">
                         <div class="flex flex-wrap items-center justify-between gap-3">
                             <div>
@@ -258,7 +258,7 @@
                 </x-ui.card>
             </div>
 
-            <div class="animate__animated animate__fadeInUp flex flex-col gap-4 rounded-[2rem] border-2 border-slate-300 bg-white/90 p-5 shadow-[0_18px_45px_rgba(15,23,42,0.08)] sm:flex-row sm:items-center sm:justify-between" style="animation-fill-mode: both; animation-delay: 260ms;">
+            <div class="animate__animated animate__fadeInUp sticky bottom-24 z-20 flex flex-col gap-4 rounded-[1.5rem] border-2 border-slate-300 bg-white/95 p-4 shadow-[0_18px_45px_rgba(15,23,42,0.12)] backdrop-blur sm:rounded-[2rem] sm:p-5 lg:static lg:flex-row lg:items-center lg:justify-between" style="animation-fill-mode: both; animation-delay: 260ms;">
                 <div class="text-sm leading-6 text-slate-600">
                     Saving creates one row in <span class="font-medium text-slate-900">polling_unit</span> and one row per party in <span class="font-medium text-slate-900">announced_pu_results</span>.
                 </div>
@@ -267,7 +267,7 @@
                     type="submit"
                     wire:loading.attr="disabled"
                     wire:target="save"
-                    class="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                    class="inline-flex w-full items-center justify-center rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                 >
                     <span wire:loading.remove wire:target="save">Save Polling Unit Result</span>
                     <span wire:loading wire:target="save">Saving...</span>

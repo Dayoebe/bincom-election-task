@@ -84,9 +84,11 @@ Open `http://127.0.0.1:8000`.
 - The install metadata and visible brand icon are generated from `public/Oyetoke_Adedayo_E.png`.
 - On desktop Chrome or Edge, open the app and use the `Install app` button in the navbar when it appears.
 - On mobile Safari, use Share -> Add to Home Screen.
+- Build the frontend with `npm run build` for production so the service worker is registered from the compiled asset bundle.
 
 ## Notes
 
 - The app uses Query Builder / `DB` facade for all legacy election queries.
 - The main LGA summary intentionally does not use `announced_lga_results`.
 - Session, queue, and cache defaults are file-based so the app does not depend on Laravel migration tables for this interview task.
+- Livewire 4 provides Alpine for the UI, so the frontend code registers Alpine data hooks against Livewire's Alpine instance instead of booting a second Alpine copy.

@@ -55,6 +55,7 @@ class CreatePollingUnitResult extends Component
     public function updatedLgaId(): void
     {
         $this->wardUniqueId = null;
+        $this->resetValidation('wardUniqueId');
     }
 
     public function save(): void
@@ -77,28 +78,32 @@ class CreatePollingUnitResult extends Component
 
         try {
             $createdUniqueId = DB::transaction(function () use ($validated, $ward, $timestamp, $userIpAddress): int {
+                $pollingUnitNumber = trim($validated['pollingUnitNumber']);
+                $pollingUnitName = trim($validated['pollingUnitName']);
+                $enteredByUser = trim($validated['enteredByUser']);
+
                 $pollingUnitUniqueId = (int) DB::table('polling_unit')->insertGetId([
                     'polling_unit_id' => (int) $validated['pollingUnitId'],
                     'ward_id' => (int) $ward->ward_id,
                     'lga_id' => (int) $ward->lga_id,
                     'uniquewardid' => (int) $ward->uniqueid,
-                    'polling_unit_number' => $validated['pollingUnitNumber'],
-                    'polling_unit_name' => $validated['pollingUnitName'],
+                    'polling_unit_number' => $pollingUnitNumber,
+                    'polling_unit_name' => $pollingUnitName,
                     'polling_unit_description' => $this->nullableValue($validated['pollingUnitDescription']),
                     'lat' => $this->nullableValue($validated['latitude']),
                     'long' => $this->nullableValue($validated['longitude']),
-                    'entered_by_user' => $validated['enteredByUser'],
+                    'entered_by_user' => $enteredByUser,
                     'date_entered' => $timestamp,
                     'user_ip_address' => $userIpAddress,
                 ], 'uniqueid');
 
                 $resultRows = collect($validated['partyScores'])
-                    ->map(function (mixed $score, string $party) use ($pollingUnitUniqueId, $validated, $timestamp, $userIpAddress): array {
+                    ->map(function (mixed $score, string $party) use ($pollingUnitUniqueId, $enteredByUser, $timestamp, $userIpAddress): array {
                         return [
                             'polling_unit_uniqueid' => (string) $pollingUnitUniqueId,
                             'party_abbreviation' => $party,
                             'party_score' => (int) $score,
-                            'entered_by_user' => $validated['enteredByUser'],
+                            'entered_by_user' => $enteredByUser,
                             'date_entered' => $timestamp,
                             'user_ip_address' => $userIpAddress,
                         ];
@@ -136,10 +141,6 @@ class CreatePollingUnitResult extends Component
                 ? $this->repository()->wardsForLga((int) $this->lgaId)
                 : collect();
             $parties = $this->repository()->parties();
-
-            if (empty($this->partyScores)) {
-                $this->resetPartyScores();
-            }
         }
 
         return view('livewire.create-polling-unit-result', [

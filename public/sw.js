@@ -1,5 +1,6 @@
-const CACHE_NAME = 'bincom-election-dashboard-v1';
+const CACHE_NAME = 'bincom-election-dashboard-v2';
 const APP_SHELL = [
+    '/',
     '/polling-unit-results',
     '/lga-result-summary',
     '/polling-unit-results/create',

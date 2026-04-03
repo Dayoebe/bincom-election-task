@@ -3,7 +3,7 @@
 ])
 
 <x-ui.card :tone="$tone" {{ $attributes }}>
-    <div class="overflow-x-auto">
+    <div class="overflow-hidden">
         {{ $slot }}
     </div>
 </x-ui.card>

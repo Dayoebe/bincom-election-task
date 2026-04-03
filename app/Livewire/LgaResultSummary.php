@@ -22,7 +22,11 @@ class LgaResultSummary extends Component
         if (! $this->repository()->legacySchemaIsAvailable()) {
             $this->legacySchemaReady = false;
             $this->legacySchemaMessage = 'Import bincom_test.sql into MySQL and refresh the page to calculate LGA summaries from polling unit results.';
+
+            return;
         }
+
+        $this->synchronizeSelectedLga();
     }
 
     public function render(): View
@@ -39,10 +43,6 @@ class LgaResultSummary extends Component
 
         if ($this->legacySchemaReady) {
             $lgas = $this->repository()->deltaLgas();
-
-            if (blank($this->selectedLga) && $lgas->isNotEmpty()) {
-                $this->selectedLga = (string) $lgas->first()->lga_id;
-            }
 
             if (filled($this->selectedLga)) {
                 $selectedLga = $this->repository()->lgaDetails((int) $this->selectedLga);
@@ -101,5 +101,23 @@ class LgaResultSummary extends Component
     private function repository(): BincomElectionRepository
     {
         return app(BincomElectionRepository::class);
+    }
+
+    private function synchronizeSelectedLga(): void
+    {
+        $lgas = $this->repository()->deltaLgas();
+
+        if ($lgas->isEmpty()) {
+            $this->selectedLga = null;
+
+            return;
+        }
+
+        if (
+            blank($this->selectedLga)
+            || ! $lgas->contains(fn ($lga): bool => (string) $lga->lga_id === (string) $this->selectedLga)
+        ) {
+            $this->selectedLga = (string) $lgas->first()->lga_id;
+        }
     }
 }

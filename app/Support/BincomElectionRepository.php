@@ -220,6 +220,10 @@ class BincomElectionRepository
 
     public function lgaOfficialResults(int $lgaId): Collection
     {
+        if (! Schema::hasTable('announced_lga_results')) {
+            return collect();
+        }
+
         return DB::table('announced_lga_results')
             ->where('lga_name', (string) $lgaId)
             ->selectRaw('party_abbreviation, SUM(party_score) as official_total')

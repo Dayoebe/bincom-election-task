@@ -30,7 +30,7 @@
             and grouped by party under the selected legacy LGA ID.
         </x-ui.alert>
 
-        <x-ui.card tone="lime" class="animate__animated animate__fadeInUp p-6" style="animation-fill-mode: both; animation-delay: 80ms;">
+        <x-ui.card tone="lime" class="animate__animated animate__fadeInUp p-5 sm:p-6" style="animation-fill-mode: both; animation-delay: 80ms;">
             <div class="grid gap-6 lg:grid-cols-[minmax(0,20rem),1fr] lg:items-end">
                 <label class="block space-y-2">
                     <span class="text-sm font-medium text-slate-700">Select LGA</span>
@@ -60,7 +60,7 @@
                 </div>
             </x-ui.card>
         @else
-            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="grid gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
                 <x-ui.stat tone="emerald" label="Computed Total Votes" :value="number_format($computedTotalVotes)" class="animate__animated animate__fadeInUp" style="animation-fill-mode: both; animation-delay: 120ms;">
                     Summed from all matching `announced_pu_results` rows.
                 </x-ui.stat>
@@ -75,7 +75,7 @@
                 </x-ui.stat>
             </div>
 
-            <x-ui.card tone="pink" class="animate__animated animate__fadeInUp p-6" style="animation-fill-mode: both; animation-delay: 180ms;">
+            <x-ui.card tone="pink" class="animate__animated animate__fadeInUp p-5 sm:p-6" style="animation-fill-mode: both; animation-delay: 180ms;">
                 <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                     <div>
                         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">LGA Name</p>
@@ -97,40 +97,78 @@
             </x-ui.card>
 
             <x-ui.table-shell tone="emerald" class="animate__animated animate__fadeInUp" style="animation-fill-mode: both; animation-delay: 220ms;">
-                <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
-                    <thead class="bg-emerald-100/80">
-                        <tr>
-                            <th class="table-head-cell">Party</th>
-                            <th class="table-head-cell">Computed Total</th>
-                            <th class="table-head-cell">Result Rows</th>
-                            <th class="table-head-cell">Contributing Polling Units</th>
-                            <th class="table-head-cell">Share of Total</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 bg-white">
-                        @forelse ($aggregatedResults as $row)
-                            <tr class="text-slate-700">
-                                <td class="table-body-cell font-semibold text-slate-950">{{ $row->party_abbreviation }}</td>
-                                <td class="table-body-cell">{{ number_format($row->total_score) }}</td>
-                                <td class="table-body-cell">{{ number_format($row->result_rows) }}</td>
-                                <td class="table-body-cell">{{ number_format($row->contributing_polling_units) }}</td>
-                                <td class="table-body-cell">
+                <div class="divide-y divide-slate-200 md:hidden">
+                    @forelse ($aggregatedResults as $row)
+                        <div class="space-y-3 px-4 py-4">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <p class="mobile-label">Party</p>
+                                    <p class="mt-1 text-lg font-semibold text-slate-950">{{ $row->party_abbreviation }}</p>
+                                </div>
+                                <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-900">
                                     {{ $computedTotalVotes > 0 ? number_format(($row->total_score / $computedTotalVotes) * 100, 1) : '0.0' }}%
-                                </td>
-                            </tr>
-                        @empty
+                                </span>
+                            </div>
+
+                            <div class="mobile-data-grid">
+                                <div class="mobile-data-panel">
+                                    <p class="mobile-label">Computed total</p>
+                                    <p class="mobile-value">{{ number_format($row->total_score) }}</p>
+                                </div>
+                                <div class="mobile-data-panel">
+                                    <p class="mobile-label">Result rows</p>
+                                    <p class="mobile-value">{{ number_format($row->result_rows) }}</p>
+                                </div>
+                            </div>
+
+                            <div class="mobile-data-panel">
+                                <p class="mobile-label">Contributing polling units</p>
+                                <p class="mobile-value">{{ number_format($row->contributing_polling_units) }}</p>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="px-4 py-10 text-center text-slate-500">
+                            No polling unit results were found for this LGA.
+                        </div>
+                    @endforelse
+                </div>
+
+                <div class="hidden overflow-x-auto md:block">
+                    <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+                        <thead class="bg-emerald-100/80">
                             <tr>
-                                <td colspan="5" class="px-6 py-10 text-center text-slate-500">
-                                    No polling unit results were found for this LGA.
-                                </td>
+                                <th class="table-head-cell">Party</th>
+                                <th class="table-head-cell">Computed Total</th>
+                                <th class="table-head-cell">Result Rows</th>
+                                <th class="table-head-cell">Contributing Polling Units</th>
+                                <th class="table-head-cell">Share of Total</th>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 bg-white">
+                            @forelse ($aggregatedResults as $row)
+                                <tr class="text-slate-700">
+                                    <td class="table-body-cell font-semibold text-slate-950">{{ $row->party_abbreviation }}</td>
+                                    <td class="table-body-cell">{{ number_format($row->total_score) }}</td>
+                                    <td class="table-body-cell">{{ number_format($row->result_rows) }}</td>
+                                    <td class="table-body-cell">{{ number_format($row->contributing_polling_units) }}</td>
+                                    <td class="table-body-cell">
+                                        {{ $computedTotalVotes > 0 ? number_format(($row->total_score / $computedTotalVotes) * 100, 1) : '0.0' }}%
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="px-6 py-10 text-center text-slate-500">
+                                        No polling unit results were found for this LGA.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </x-ui.table-shell>
 
             @if ($comparisonRows->isNotEmpty())
-                <x-ui.card tone="violet" class="animate__animated animate__fadeInUp p-6" style="animation-fill-mode: both; animation-delay: 260ms;">
+                <x-ui.card tone="violet" class="animate__animated animate__fadeInUp p-5 sm:p-6" style="animation-fill-mode: both; animation-delay: 260ms;">
                     <div class="space-y-2">
                         <h2 class="text-xl font-semibold text-slate-950">Optional Comparison Against announced_lga_results</h2>
                         <p class="text-sm leading-6 text-slate-600">
@@ -147,28 +185,57 @@
 
                 <div x-cloak x-show="showComparison" x-transition.opacity.scale.origin.top>
                     <x-ui.table-shell tone="violet">
-                        <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
-                            <thead class="bg-violet-100/80">
-                                <tr>
-                                    <th class="table-head-cell">Party</th>
-                                    <th class="table-head-cell">Computed Total</th>
-                                    <th class="table-head-cell">announced_lga_results</th>
-                                    <th class="table-head-cell">Difference</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 bg-white">
-                                @foreach ($comparisonRows as $row)
-                                    <tr class="text-slate-700">
-                                        <td class="table-body-cell font-semibold text-slate-950">{{ $row->party_abbreviation }}</td>
-                                        <td class="table-body-cell">{{ number_format($row->computed_total) }}</td>
-                                        <td class="table-body-cell">{{ number_format($row->official_total) }}</td>
-                                        <td class="table-body-cell {{ $row->difference === 0 ? 'text-slate-700' : ($row->difference > 0 ? 'text-emerald-700' : 'text-rose-700') }}">
+                        <div class="divide-y divide-slate-200 md:hidden">
+                            @foreach ($comparisonRows as $row)
+                                <div class="space-y-3 px-4 py-4">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div>
+                                            <p class="mobile-label">Party</p>
+                                            <p class="mt-1 text-lg font-semibold text-slate-950">{{ $row->party_abbreviation }}</p>
+                                        </div>
+                                        <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $row->difference === 0 ? 'bg-slate-100 text-slate-700' : ($row->difference > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800') }}">
                                             {{ number_format($row->difference) }}
-                                        </td>
+                                        </span>
+                                    </div>
+
+                                    <div class="mobile-data-grid">
+                                        <div class="mobile-data-panel">
+                                            <p class="mobile-label">Computed total</p>
+                                            <p class="mobile-value">{{ number_format($row->computed_total) }}</p>
+                                        </div>
+                                        <div class="mobile-data-panel">
+                                            <p class="mobile-label">Legacy total</p>
+                                            <p class="mobile-value">{{ number_format($row->official_total) }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div class="hidden overflow-x-auto md:block">
+                            <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+                                <thead class="bg-violet-100/80">
+                                    <tr>
+                                        <th class="table-head-cell">Party</th>
+                                        <th class="table-head-cell">Computed Total</th>
+                                        <th class="table-head-cell">announced_lga_results</th>
+                                        <th class="table-head-cell">Difference</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    @foreach ($comparisonRows as $row)
+                                        <tr class="text-slate-700">
+                                            <td class="table-body-cell font-semibold text-slate-950">{{ $row->party_abbreviation }}</td>
+                                            <td class="table-body-cell">{{ number_format($row->computed_total) }}</td>
+                                            <td class="table-body-cell">{{ number_format($row->official_total) }}</td>
+                                            <td class="table-body-cell {{ $row->difference === 0 ? 'text-slate-700' : ($row->difference > 0 ? 'text-emerald-700' : 'text-rose-700') }}">
+                                                {{ number_format($row->difference) }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </x-ui.table-shell>
                 </div>
             @endif
