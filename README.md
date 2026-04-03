@@ -1,59 +1,85 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Bincom Election Dashboard
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel 12 + Livewire + Tailwind CSS implementation of the interview task using the legacy schema in `bincom_test.sql`.
 
-## About Laravel
+## Schema Summary
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The app is built directly against the SQL dump and does not assume Laravel naming conventions.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- `polling_unit.uniqueid` is the polling unit primary key.
+- `announced_pu_results.polling_unit_uniqueid` maps to `polling_unit.uniqueid`.
+- `polling_unit.lga_id` maps to `lga.lga_id`, not `lga.uniqueid`.
+- `polling_unit.uniquewardid` maps to `ward.uniqueid`.
+- `ward.lga_id` maps to `lga.lga_id`.
+- `announced_lga_results.lga_name` stores numeric LGA IDs as strings.
+- The dump only contains Delta State LGAs with `state_id = 25`.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Pages
 
-## Learning Laravel
+- `Polling Unit Result`
+  - Search and select a polling unit with announced results.
+  - Display polling unit details, summed party scores, and raw announced rows.
+- `LGA Result Summary`
+  - Select an LGA and compute totals from `announced_pu_results`.
+  - Optional comparison against `announced_lga_results`.
+- `Add New Polling Unit Result`
+  - Create a polling unit and insert all party result rows in one database transaction.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Setup
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. Install PHP dependencies.
 
-## Laravel Sponsors
+```bash
+composer install
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. Install frontend dependencies.
 
-### Premium Partners
+```bash
+npm install
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+3. Create the MySQL database and import the dump.
 
-## Contributing
+```bash
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS bincomphptest"
+mysql -u root bincomphptest < bincom_test.sql
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. Copy the environment file if needed and confirm the database settings.
 
-## Code of Conduct
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Expected database settings:
 
-## Security Vulnerabilities
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=bincomphptest
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+5. Build assets.
 
-## License
+```bash
+npm run build
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+6. Start the Laravel server.
+
+```bash
+php artisan serve
+```
+
+Open `http://127.0.0.1:8000`.
+
+## Notes
+
+- The app uses Query Builder / `DB` facade for all legacy election queries.
+- The main LGA summary intentionally does not use `announced_lga_results`.
+- Session, queue, and cache defaults are file-based so the app does not depend on Laravel migration tables for this interview task.

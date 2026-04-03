@@ -9,3 +9,13 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+@layer base {
+    body {
+        @apply bg-slate-100 text-slate-900 antialiased;
+    }
+
+    ::selection {
+        @apply bg-sky-100 text-sky-950;
+    }
+}

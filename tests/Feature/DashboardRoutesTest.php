@@ -1,24 +1,35 @@
 <?php
 
-it('redirects the root path to the polling unit result page', function () {
-    $this->get('/')
-        ->assertRedirect(route('polling-unit-results'));
-});
+namespace Tests\Feature;
 
-it('renders the polling unit result page', function () {
-    $this->get(route('polling-unit-results'))
-        ->assertOk()
-        ->assertSee('Polling Unit Result');
-});
+use Tests\TestCase;
 
-it('renders the lga summary page', function () {
-    $this->get(route('lga-result-summary'))
-        ->assertOk()
-        ->assertSee('LGA Result Summary');
-});
+class DashboardRoutesTest extends TestCase
+{
+    public function test_root_redirects_to_the_polling_unit_result_page(): void
+    {
+        $this->get('/')
+            ->assertRedirect(route('polling-unit-results'));
+    }
 
-it('renders the create polling unit result page', function () {
-    $this->get(route('create-polling-unit-result'))
-        ->assertOk()
-        ->assertSee('Add New Polling Unit Result');
-});
+    public function test_polling_unit_result_page_renders(): void
+    {
+        $this->get(route('polling-unit-results'))
+            ->assertOk()
+            ->assertSee('Polling Unit Result');
+    }
+
+    public function test_lga_summary_page_renders(): void
+    {
+        $this->get(route('lga-result-summary'))
+            ->assertOk()
+            ->assertSee('LGA Result Summary');
+    }
+
+    public function test_create_polling_unit_result_page_renders(): void
+    {
+        $this->get(route('create-polling-unit-result'))
+            ->assertOk()
+            ->assertSee('Add New Polling Unit Result');
+    }
+}
