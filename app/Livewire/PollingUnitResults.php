@@ -37,7 +37,12 @@ class PollingUnitResults extends Component
         if ($this->legacySchemaReady) {
             $pollingUnits = $this->repository()->searchablePollingUnits($this->search);
 
-            if (blank($this->selectedPollingUnit) && $pollingUnits->isNotEmpty()) {
+            if ($pollingUnits->isEmpty()) {
+                $this->selectedPollingUnit = null;
+            } elseif (
+                blank($this->selectedPollingUnit)
+                || ! $pollingUnits->contains(fn ($unit): bool => (string) $unit->uniqueid === (string) $this->selectedPollingUnit)
+            ) {
                 $this->selectedPollingUnit = (string) $pollingUnits->first()->uniqueid;
             }
 

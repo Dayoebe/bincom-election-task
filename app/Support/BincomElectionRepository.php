@@ -89,9 +89,9 @@ class BincomElectionRepository
     public function searchablePollingUnits(?string $search = null): Collection
     {
         $query = DB::table('polling_unit as pu')
-            ->join('announced_pu_results as apr', 'apr.polling_unit_uniqueid', '=', 'pu.uniqueid')
             ->join('lga as l', 'l.lga_id', '=', 'pu.lga_id')
             ->leftJoin('ward as w', 'w.uniqueid', '=', 'pu.uniquewardid')
+            ->leftJoin('announced_pu_results as apr', 'apr.polling_unit_uniqueid', '=', 'pu.uniqueid')
             ->where('l.state_id', 25)
             ->select([
                 'pu.uniqueid',
@@ -101,8 +101,18 @@ class BincomElectionRepository
                 'l.lga_id',
                 'l.lga_name',
                 'w.ward_name',
+                DB::raw('COUNT(apr.result_id) as result_row_count'),
             ])
-            ->distinct()
+            ->groupBy(
+                'pu.uniqueid',
+                'pu.polling_unit_id',
+                'pu.polling_unit_number',
+                'pu.polling_unit_name',
+                'l.lga_id',
+                'l.lga_name',
+                'w.ward_name'
+            )
+            ->orderByDesc('result_row_count')
             ->orderBy('l.lga_name')
             ->orderBy('w.ward_name')
             ->orderBy('pu.polling_unit_name')
@@ -114,11 +124,13 @@ class BincomElectionRepository
 
             $query->where(function ($builder) use ($term, $likeTerm): void {
                 if (is_numeric($term)) {
-                    $builder->orWhere('pu.uniqueid', (int) $term);
+                    $builder->where('pu.uniqueid', (int) $term);
+                    $builder->orWhere('pu.polling_unit_number', 'like', $likeTerm);
+                } else {
+                    $builder->where('pu.polling_unit_number', 'like', $likeTerm);
                 }
 
                 $builder
-                    ->orWhere('pu.polling_unit_number', 'like', $likeTerm)
                     ->orWhere('pu.polling_unit_name', 'like', $likeTerm)
                     ->orWhere('l.lga_name', 'like', $likeTerm)
                     ->orWhere('w.ward_name', 'like', $likeTerm);

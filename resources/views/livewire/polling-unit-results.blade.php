@@ -7,7 +7,7 @@
 <div class="space-y-8">
     <x-ui.section-heading
         title="Polling Unit Result"
-        description="Select any polling unit with announced results and review the verified party totals, the polling unit profile, and the underlying announced rows from the legacy dump."
+        description="Select any Delta State polling unit and review its profile, summed party totals, and underlying announced rows from the legacy dump."
     >
         <x-slot:actions>
             <span class="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600">
@@ -33,7 +33,7 @@
                     <div>
                         <h2 class="text-lg font-semibold text-slate-950">Find a Polling Unit</h2>
                         <p class="mt-1 text-sm leading-6 text-slate-600">
-                            Search by polling unit number, name, LGA, ward, or the legacy `uniqueid`.
+                            Search by polling unit number, name, LGA, ward, or the legacy `uniqueid`. Units without result rows are still selectable.
                         </p>
                     </div>
 
@@ -57,15 +57,22 @@
                                 @php
                                     $name = trim((string) $option->polling_unit_name) !== '' ? $option->polling_unit_name : 'Unnamed polling unit';
                                     $number = trim((string) $option->polling_unit_number) !== '' ? $option->polling_unit_number : 'No number';
+                                    $resultLabel = (int) $option->result_row_count > 0
+                                        ? number_format($option->result_row_count).' result row'.((int) $option->result_row_count === 1 ? '' : 's')
+                                        : 'No results yet';
                                 @endphp
                                 <option value="{{ $option->uniqueid }}">
-                                    {{ $number }} • {{ $name }} • {{ $option->lga_name }}
+                                    {{ $number }} • {{ $name }} • {{ $option->lga_name }} • {{ $resultLabel }}
                                 </option>
                             @empty
                                 <option value="">No matching polling units</option>
                             @endforelse
                         </select>
                     </label>
+
+                    <div wire:loading.delay wire:target="search,selectedPollingUnit" class="text-sm text-slate-500">
+                        Loading polling unit data...
+                    </div>
 
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-600">
                         Result lookup uses the verified legacy relationship:
@@ -162,6 +169,10 @@
                     @if ($hasDuplicateRows)
                         <x-ui.alert type="info">
                             This polling unit has repeated party rows in `announced_pu_results`. The summary table below intentionally sums all matching rows per party from the dump.
+                        </x-ui.alert>
+                    @elseif ($entryRows->isEmpty())
+                        <x-ui.alert type="warning">
+                            This polling unit exists in the legacy polling unit table, but it does not have any announced party result rows yet.
                         </x-ui.alert>
                     @endif
 
