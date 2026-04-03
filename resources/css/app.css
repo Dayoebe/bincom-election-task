@@ -13,10 +13,7 @@
 
 @layer theme {
     :root {
-        --tone-taupe: #bea58a;
-        --tone-mauve: #b78cae;
         --tone-mist: #dbe7eb;
-        --tone-olive: #7f8b4f;
         --surface-paper: #fffdf7;
         --surface-base: #f5efe3;
         --surface-deep: #172033;
@@ -51,10 +48,6 @@
 }
 
 @layer components {
-    .palette-swatch {
-        @apply relative h-9 w-9 shrink-0 cursor-pointer rounded-full border-2 border-white/85 shadow-sm shadow-slate-300/70 transition duration-300 hover:-translate-y-1 hover:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-200;
-    }
-
     .pattern-badge {
         @apply inline-flex items-center rounded-full border-2 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em];
     }

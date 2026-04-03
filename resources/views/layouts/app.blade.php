@@ -3,11 +3,25 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Installable Delta State election results dashboard built with Laravel, Livewire, Tailwind CSS, and MySQL.">
+        <meta name="theme-color" content="#0f172a">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="{{ config('app.name') }}">
+        <meta name="application-name" content="{{ config('app.name') }}">
+        <meta property="og:title" content="{{ $title ?? config('app.name') }}">
+        <meta property="og:description" content="Delta State election results dashboard built on the verified legacy Bincom schema.">
+        <meta property="og:image" content="{{ asset('icons/icon-512.png') }}">
+        <meta name="twitter:card" content="summary">
 
         <title>{{ $title ?? config('app.name') }}</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
+        <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icons/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('icons/icon-192.png') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('icons/apple-touch-icon.png') }}">
 
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
             @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -50,9 +64,11 @@
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div class="flex items-center justify-between gap-4 py-4">
                         <a href="{{ route('polling-unit-results') }}" class="flex min-w-0 items-center gap-3">
-                            <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-sm font-semibold text-white shadow-sm">
-                                BE
-                            </span>
+                            <img
+                                src="{{ asset('icons/icon-192.png') }}"
+                                alt="{{ config('app.name') }} icon"
+                                class="h-11 w-11 shrink-0 rounded-xl border border-slate-200 bg-white object-cover shadow-sm"
+                            >
 
                             <span class="min-w-0">
                                 <span class="block truncate text-base font-semibold tracking-tight text-slate-950 sm:text-lg">
@@ -75,6 +91,21 @@
                                     </a>
                                 @endforeach
                             </nav>
+
+                            <button
+                                x-cloak
+                                x-show="canInstall"
+                                type="button"
+                                @click="install()"
+                                class="inline-flex items-center gap-2 rounded-full border border-slate-900 bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-800"
+                            >
+                                <img
+                                    src="{{ asset('icons/favicon-32x32.png') }}"
+                                    alt=""
+                                    class="h-4 w-4 rounded object-cover"
+                                >
+                                Install app
+                            </button>
 
                             <div class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600">
                                 <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
@@ -111,6 +142,21 @@
                             @endforeach
                         </div>
 
+                        <button
+                            x-cloak
+                            x-show="canInstall"
+                            type="button"
+                            @click="install()"
+                            class="mt-4 inline-flex items-center gap-2 rounded-xl border border-slate-900 bg-slate-900 px-4 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-slate-800"
+                        >
+                            <img
+                                src="{{ asset('icons/favicon-32x32.png') }}"
+                                alt=""
+                                class="h-4 w-4 rounded object-cover"
+                            >
+                            Install app
+                        </button>
+
                         <div class="mt-4 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-600">
                             <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
                             Delta State dataset
@@ -128,6 +174,11 @@
             <footer class="border-t-2 border-slate-300 bg-[var(--surface-paper)]/90">
                 <div class="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-sm text-slate-500 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
                     <div class="flex flex-wrap items-center gap-2">
+                        <img
+                            src="{{ asset('icons/favicon-32x32.png') }}"
+                            alt="{{ config('app.name') }} icon"
+                            class="h-6 w-6 rounded-md border border-slate-200 bg-white object-cover"
+                        >
                         <span class="h-3.5 w-3.5 rounded-full bg-red-400"></span>
                         <span class="h-3.5 w-3.5 rounded-full bg-amber-400"></span>
                         <span class="h-3.5 w-3.5 rounded-full bg-lime-400"></span>
@@ -136,7 +187,7 @@
                         <span class="h-3.5 w-3.5 rounded-full bg-rose-400"></span>
                         <p>Built with Laravel, Livewire, Alpine, animate.css, Tailwind CSS, and MySQL Query Builder.</p>
                     </div>
-                    <p>State scope: Delta (`state_id = 25`). No gradient coloring used.</p>
+                    <p><a href="https://dayoebe.github.io" target="_blank" rel="noopener noreferrer" class="text-slate-600 hover:text-slate-900">Oyetoke Adedayo Ebenezer</a></p>
                 </div>
             </footer>
         </div>

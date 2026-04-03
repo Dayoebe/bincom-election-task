@@ -6,42 +6,41 @@ window.Alpine = Alpine;
 
 Alpine.data('appShell', () => ({
     navOpen: false,
-    activePalette: 0,
-    paletteNames: [
-        'Red',
-        'Orange',
-        'Amber',
-        'Yellow',
-        'Lime',
-        'Green',
-        'Emerald',
-        'Teal',
-        'Cyan',
-        'Sky',
-        'Blue',
-        'Indigo',
-        'Violet',
-        'Purple',
-        'Fuchsia',
-        'Pink',
-        'Rose',
-        'Slate',
-        'Gray',
-        'Zinc',
-        'Neutral',
-        'Stone',
-        'Taupe',
-        'Mauve',
-        'Mist',
-        'Olive',
-    ],
+    deferredInstallPrompt: null,
+    canInstall: false,
     init() {
-        this.paletteTimer = setInterval(() => {
-            this.activePalette = (this.activePalette + 1) % this.paletteNames.length;
-        }, 2200);
+        const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            }, { once: true });
+        }
+
+        if (! standalone) {
+            window.addEventListener('beforeinstallprompt', (event) => {
+                event.preventDefault();
+                this.deferredInstallPrompt = event;
+                this.canInstall = true;
+            });
+        }
+
+        window.addEventListener('appinstalled', () => {
+            this.deferredInstallPrompt = null;
+            this.canInstall = false;
+        });
     },
-    setActive(index) {
-        this.activePalette = index;
+    async install() {
+        if (! this.deferredInstallPrompt) {
+            return;
+        }
+
+        this.deferredInstallPrompt.prompt();
+        await this.deferredInstallPrompt.userChoice;
+
+        this.deferredInstallPrompt = null;
+        this.canInstall = false;
+        this.closeNav();
     },
     closeNav() {
         this.navOpen = false;

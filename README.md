@@ -78,6 +78,13 @@ php artisan serve
 
 Open `http://127.0.0.1:8000`.
 
+## Installable Web App
+
+- The app includes a web app manifest and service worker, so supported browsers can install it as a standalone app.
+- The install metadata and visible brand icon are generated from `public/Oyetoke_Adedayo_E.png`.
+- On desktop Chrome or Edge, open the app and use the `Install app` button in the navbar when it appears.
+- On mobile Safari, use Share -> Add to Home Screen.
+
 ## Notes
 
 - The app uses Query Builder / `DB` facade for all legacy election queries.
