@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'animate.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -10,12 +11,63 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+@layer theme {
+    :root {
+        --tone-taupe: #bea58a;
+        --tone-mauve: #b78cae;
+        --tone-mist: #dbe7eb;
+        --tone-olive: #7f8b4f;
+        --surface-paper: #fffdf7;
+        --surface-base: #f5efe3;
+        --surface-deep: #172033;
+    }
+}
+
 @layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
     body {
-        @apply bg-slate-100 text-slate-900 antialiased;
+        background-color: var(--surface-base);
+        @apply text-slate-900 antialiased;
     }
 
     ::selection {
-        @apply bg-sky-100 text-sky-950;
+        @apply bg-amber-200 text-slate-950;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    .animate__animated {
+        --animate-duration: 720ms;
+    }
+
+    .animate__animated.animate__fast {
+        --animate-duration: 520ms;
+    }
+}
+
+@layer components {
+    .palette-swatch {
+        @apply relative h-9 w-9 shrink-0 rounded-full border-2 border-white/85 shadow-sm shadow-slate-300/70 transition duration-300;
+    }
+
+    .pattern-badge {
+        @apply inline-flex items-center rounded-full border-2 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em];
+    }
+
+    .surface-note {
+        @apply rounded-[1.6rem] border-2 px-4 py-4 text-sm leading-6 shadow-sm;
+    }
+
+    .table-head-cell {
+        @apply px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-700;
+    }
+
+    .table-body-cell {
+        @apply px-6 py-4 text-sm text-slate-700;
     }
 }

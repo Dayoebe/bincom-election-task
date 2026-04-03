@@ -3,14 +3,18 @@
     $leadingParty = $aggregatedResults->first();
 @endphp
 
-<div class="space-y-8">
+<div class="space-y-8" x-data="{ showComparison: false }">
     <x-ui.section-heading
         title="LGA Result Summary"
         description="Compute each LGA total directly from polling unit result rows in announced_pu_results. The summary below does not rely on announced_lga_results for its main totals."
+        class="animate__animated animate__fadeInDown"
     >
         <x-slot:actions>
-            <span class="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600">
+            <span class="pattern-badge border-violet-300 bg-violet-100 text-violet-900">
                 Aggregated from polling units
+            </span>
+            <span class="pattern-badge border-lime-300 bg-lime-100 text-lime-900">
+                Party totals by LGA
             </span>
         </x-slot:actions>
     </x-ui.section-heading>
@@ -26,7 +30,7 @@
             and grouped by party under the selected legacy LGA ID.
         </x-ui.alert>
 
-        <x-ui.card class="p-6">
+        <x-ui.card tone="lime" class="animate__animated animate__fadeInUp p-6" style="animation-fill-mode: both; animation-delay: 80ms;">
             <div class="grid gap-6 lg:grid-cols-[minmax(0,20rem),1fr] lg:items-end">
                 <label class="block space-y-2">
                     <span class="text-sm font-medium text-slate-700">Select LGA</span>
@@ -40,7 +44,7 @@
                     </select>
                 </label>
 
-                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-600">
+                <div class="surface-note border-lime-200 bg-lime-100/80 text-lime-950">
                     `announced_lga_results` is shown below only as an optional comparison snapshot. The primary summary is calculated from polling units for the selected LGA.
                 </div>
             </div>
@@ -57,21 +61,21 @@
             </x-ui.card>
         @else
             <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                <x-ui.stat label="Computed Total Votes" :value="number_format($computedTotalVotes)">
+                <x-ui.stat tone="emerald" label="Computed Total Votes" :value="number_format($computedTotalVotes)" class="animate__animated animate__fadeInUp" style="animation-fill-mode: both; animation-delay: 120ms;">
                     Summed from all matching `announced_pu_results` rows.
                 </x-ui.stat>
-                <x-ui.stat label="Leading Party" :value="$leadingParty?->party_abbreviation ?? 'N/A'">
+                <x-ui.stat tone="violet" label="Leading Party" :value="$leadingParty?->party_abbreviation ?? 'N/A'" class="animate__animated animate__fadeInUp" style="animation-fill-mode: both; animation-delay: 180ms;">
                     {{ $leadingParty ? number_format($leadingParty->total_score) . ' votes' : 'No result rows found' }}
                 </x-ui.stat>
-                <x-ui.stat label="Polling Units With Results" :value="number_format($coverage['polling_units_with_results'])">
+                <x-ui.stat tone="orange" label="Polling Units With Results" :value="number_format($coverage['polling_units_with_results'])" class="animate__animated animate__fadeInUp" style="animation-fill-mode: both; animation-delay: 240ms;">
                     Out of {{ number_format($coverage['polling_units']) }} polling unit record{{ $coverage['polling_units'] === 1 ? '' : 's' }} in this LGA.
                 </x-ui.stat>
-                <x-ui.stat label="Result Rows" :value="number_format($coverage['result_rows'])">
+                <x-ui.stat tone="blue" label="Result Rows" :value="number_format($coverage['result_rows'])" class="animate__animated animate__fadeInUp" style="animation-fill-mode: both; animation-delay: 300ms;">
                     Raw party rows contributing to the aggregation.
                 </x-ui.stat>
             </div>
 
-            <x-ui.card class="p-6">
+            <x-ui.card tone="pink" class="animate__animated animate__fadeInUp p-6" style="animation-fill-mode: both; animation-delay: 180ms;">
                 <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                     <div>
                         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">LGA Name</p>
@@ -92,25 +96,25 @@
                 </div>
             </x-ui.card>
 
-            <x-ui.table-shell>
+            <x-ui.table-shell tone="emerald" class="animate__animated animate__fadeInUp" style="animation-fill-mode: both; animation-delay: 220ms;">
                 <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
-                    <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    <thead class="bg-emerald-100/80">
                         <tr>
-                            <th class="px-6 py-4">Party</th>
-                            <th class="px-6 py-4">Computed Total</th>
-                            <th class="px-6 py-4">Result Rows</th>
-                            <th class="px-6 py-4">Contributing Polling Units</th>
-                            <th class="px-6 py-4">Share of Total</th>
+                            <th class="table-head-cell">Party</th>
+                            <th class="table-head-cell">Computed Total</th>
+                            <th class="table-head-cell">Result Rows</th>
+                            <th class="table-head-cell">Contributing Polling Units</th>
+                            <th class="table-head-cell">Share of Total</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 bg-white">
                         @forelse ($aggregatedResults as $row)
                             <tr class="text-slate-700">
-                                <td class="px-6 py-4 font-semibold text-slate-950">{{ $row->party_abbreviation }}</td>
-                                <td class="px-6 py-4">{{ number_format($row->total_score) }}</td>
-                                <td class="px-6 py-4">{{ number_format($row->result_rows) }}</td>
-                                <td class="px-6 py-4">{{ number_format($row->contributing_polling_units) }}</td>
-                                <td class="px-6 py-4">
+                                <td class="table-body-cell font-semibold text-slate-950">{{ $row->party_abbreviation }}</td>
+                                <td class="table-body-cell">{{ number_format($row->total_score) }}</td>
+                                <td class="table-body-cell">{{ number_format($row->result_rows) }}</td>
+                                <td class="table-body-cell">{{ number_format($row->contributing_polling_units) }}</td>
+                                <td class="table-body-cell">
                                     {{ $computedTotalVotes > 0 ? number_format(($row->total_score / $computedTotalVotes) * 100, 1) : '0.0' }}%
                                 </td>
                             </tr>
@@ -126,39 +130,47 @@
             </x-ui.table-shell>
 
             @if ($comparisonRows->isNotEmpty())
-                <x-ui.card class="p-6">
+                <x-ui.card tone="violet" class="animate__animated animate__fadeInUp p-6" style="animation-fill-mode: both; animation-delay: 260ms;">
                     <div class="space-y-2">
                         <h2 class="text-xl font-semibold text-slate-950">Optional Comparison Against announced_lga_results</h2>
                         <p class="text-sm leading-6 text-slate-600">
                             The legacy `announced_lga_results.lga_name` column stores numeric LGA IDs as strings. This table compares that snapshot against the polling-unit aggregation above.
                         </p>
+                        <button
+                            type="button"
+                            @click="showComparison = !showComparison"
+                            class="inline-flex items-center rounded-full border-2 border-violet-300 bg-white px-4 py-2 text-sm font-semibold text-violet-900 transition hover:bg-violet-100"
+                            x-text="showComparison ? 'Hide comparison table' : 'Show comparison table'"
+                        ></button>
                     </div>
                 </x-ui.card>
 
-                <x-ui.table-shell>
-                    <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
-                        <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                            <tr>
-                                <th class="px-6 py-4">Party</th>
-                                <th class="px-6 py-4">Computed Total</th>
-                                <th class="px-6 py-4">announced_lga_results</th>
-                                <th class="px-6 py-4">Difference</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 bg-white">
-                            @foreach ($comparisonRows as $row)
-                                <tr class="text-slate-700">
-                                    <td class="px-6 py-4 font-semibold text-slate-950">{{ $row->party_abbreviation }}</td>
-                                    <td class="px-6 py-4">{{ number_format($row->computed_total) }}</td>
-                                    <td class="px-6 py-4">{{ number_format($row->official_total) }}</td>
-                                    <td class="px-6 py-4 {{ $row->difference === 0 ? 'text-slate-700' : ($row->difference > 0 ? 'text-emerald-700' : 'text-rose-700') }}">
-                                        {{ number_format($row->difference) }}
-                                    </td>
+                <div x-cloak x-show="showComparison" x-transition.opacity.scale.origin.top>
+                    <x-ui.table-shell tone="violet">
+                        <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+                            <thead class="bg-violet-100/80">
+                                <tr>
+                                    <th class="table-head-cell">Party</th>
+                                    <th class="table-head-cell">Computed Total</th>
+                                    <th class="table-head-cell">announced_lga_results</th>
+                                    <th class="table-head-cell">Difference</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </x-ui.table-shell>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 bg-white">
+                                @foreach ($comparisonRows as $row)
+                                    <tr class="text-slate-700">
+                                        <td class="table-body-cell font-semibold text-slate-950">{{ $row->party_abbreviation }}</td>
+                                        <td class="table-body-cell">{{ number_format($row->computed_total) }}</td>
+                                        <td class="table-body-cell">{{ number_format($row->official_total) }}</td>
+                                        <td class="table-body-cell {{ $row->difference === 0 ? 'text-slate-700' : ($row->difference > 0 ? 'text-emerald-700' : 'text-rose-700') }}">
+                                            {{ number_format($row->difference) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </x-ui.table-shell>
+                </div>
             @endif
         @endif
     @endif

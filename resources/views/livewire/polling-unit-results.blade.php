@@ -4,14 +4,18 @@
     $hasDuplicateRows = $entryRows->count() > $partyTotals->count();
 @endphp
 
-<div class="space-y-8">
+<div class="space-y-8" x-data="{ showRawRows: false }">
     <x-ui.section-heading
         title="Polling Unit Result"
         description="Select any Delta State polling unit and review its profile, summed party totals, and underlying announced rows from the legacy dump."
+        class="animate__animated animate__fadeInDown"
     >
         <x-slot:actions>
-            <span class="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600">
+            <span class="pattern-badge border-cyan-300 bg-cyan-100 text-cyan-900">
                 Delta State source data
+            </span>
+            <span class="pattern-badge border-orange-300 bg-orange-100 text-orange-900">
+                Live lookup experience
             </span>
         </x-slot:actions>
     </x-ui.section-heading>
@@ -28,7 +32,7 @@
         @endif
 
         <div class="grid gap-6 xl:grid-cols-[22rem,minmax(0,1fr)]">
-            <x-ui.card class="p-6">
+            <x-ui.card tone="amber" class="animate__animated animate__fadeInLeft p-6" style="animation-fill-mode: both; animation-delay: 80ms;">
                 <div class="space-y-5">
                     <div>
                         <h2 class="text-lg font-semibold text-slate-950">Find a Polling Unit</h2>
@@ -74,7 +78,7 @@
                         Loading polling unit data...
                     </div>
 
-                    <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-600">
+                    <div class="surface-note border-orange-200 bg-orange-100/80 text-orange-950">
                         Result lookup uses the verified legacy relationship:
                         <span class="font-medium text-slate-900">polling_unit.uniqueid</span>
                         →
@@ -85,7 +89,7 @@
 
             <div class="space-y-6">
                 @if (! $pollingUnit)
-                    <x-ui.card class="flex min-h-64 items-center justify-center p-8 text-center">
+                    <x-ui.card tone="stone" class="animate__animated animate__fadeInUp flex min-h-64 items-center justify-center p-8 text-center" style="animation-fill-mode: both; animation-delay: 120ms;">
                         <div class="max-w-md space-y-3">
                             <h2 class="text-xl font-semibold text-slate-950">No polling unit selected</h2>
                             <p class="text-sm leading-6 text-slate-600">
@@ -95,21 +99,21 @@
                     </x-ui.card>
                 @else
                     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                        <x-ui.stat label="Total Votes" :value="number_format($totalVotes)">
+                        <x-ui.stat tone="cyan" label="Total Votes" :value="number_format($totalVotes)" class="animate__animated animate__fadeInUp" style="animation-fill-mode: both; animation-delay: 120ms;">
                             Summed from {{ number_format($entryRows->count()) }} announced row{{ $entryRows->count() === 1 ? '' : 's' }}.
                         </x-ui.stat>
-                        <x-ui.stat label="Parties" :value="$partyTotals->count()">
+                        <x-ui.stat tone="orange" label="Parties" :value="$partyTotals->count()" class="animate__animated animate__fadeInUp" style="animation-fill-mode: both; animation-delay: 180ms;">
                             Party groups found in the selected polling unit.
                         </x-ui.stat>
-                        <x-ui.stat label="LGA" :value="$pollingUnit->lga_name">
+                        <x-ui.stat tone="violet" label="LGA" :value="$pollingUnit->lga_name" class="animate__animated animate__fadeInUp" style="animation-fill-mode: both; animation-delay: 240ms;">
                             Legacy LGA ID: {{ $pollingUnit->lga_id }}
                         </x-ui.stat>
-                        <x-ui.stat label="Latest Entry" :value="$latestEntry ? \Illuminate\Support\Carbon::parse($latestEntry)->format('d M Y, H:i') : 'Not available'">
+                        <x-ui.stat tone="rose" label="Latest Entry" :value="$latestEntry ? \Illuminate\Support\Carbon::parse($latestEntry)->format('d M Y, H:i') : 'Not available'" class="animate__animated animate__fadeInUp" style="animation-fill-mode: both; animation-delay: 300ms;">
                             Polling unit uniqueid: {{ $pollingUnit->uniqueid }}
                         </x-ui.stat>
                     </div>
 
-                    <x-ui.card class="p-6">
+                    <x-ui.card tone="sky" class="animate__animated animate__fadeInUp p-6" style="animation-fill-mode: both; animation-delay: 180ms;">
                         <div class="grid gap-6 lg:grid-cols-2">
                             <div class="space-y-4">
                                 <div>
@@ -142,7 +146,7 @@
                                 </dl>
                             </div>
 
-                            <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                            <div class="rounded-[1.75rem] border-2 border-white/80 bg-[var(--tone-mist)] p-5 shadow-sm shadow-slate-300/40">
                                 <p class="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Record Snapshot</p>
                                 <dl class="mt-4 space-y-4 text-sm text-slate-700">
                                     <div class="flex items-center justify-between gap-4 border-b border-slate-200 pb-3">
@@ -176,27 +180,27 @@
                         </x-ui.alert>
                     @endif
 
-                    <x-ui.table-shell>
+                    <x-ui.table-shell tone="teal" class="animate__animated animate__fadeInUp" style="animation-fill-mode: both; animation-delay: 240ms;">
                         <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
-                            <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                            <thead class="bg-teal-100/80">
                                 <tr>
-                                    <th class="px-6 py-4">Party</th>
-                                    <th class="px-6 py-4">Summed Score</th>
-                                    <th class="px-6 py-4">Result Rows</th>
-                                    <th class="px-6 py-4">Share of Total</th>
-                                    <th class="px-6 py-4">Latest Entry</th>
+                                    <th class="table-head-cell">Party</th>
+                                    <th class="table-head-cell">Summed Score</th>
+                                    <th class="table-head-cell">Result Rows</th>
+                                    <th class="table-head-cell">Share of Total</th>
+                                    <th class="table-head-cell">Latest Entry</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100 bg-white">
                                 @forelse ($partyTotals as $row)
                                     <tr class="text-slate-700">
-                                        <td class="px-6 py-4 font-semibold text-slate-950">{{ $row->party_abbreviation }}</td>
-                                        <td class="px-6 py-4">{{ number_format($row->total_score) }}</td>
-                                        <td class="px-6 py-4">{{ number_format($row->result_rows) }}</td>
-                                        <td class="px-6 py-4">
+                                        <td class="table-body-cell font-semibold text-slate-950">{{ $row->party_abbreviation }}</td>
+                                        <td class="table-body-cell">{{ number_format($row->total_score) }}</td>
+                                        <td class="table-body-cell">{{ number_format($row->result_rows) }}</td>
+                                        <td class="table-body-cell">
                                             {{ $totalVotes > 0 ? number_format(($row->total_score / $totalVotes) * 100, 1) : '0.0' }}%
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="table-body-cell">
                                             {{ $row->latest_entry_at ? \Illuminate\Support\Carbon::parse($row->latest_entry_at)->format('d M Y, H:i') : 'Not recorded' }}
                                         </td>
                                     </tr>
@@ -211,38 +215,56 @@
                         </table>
                     </x-ui.table-shell>
 
-                    <x-ui.table-shell>
-                        <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
-                            <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                                <tr>
-                                    <th class="px-6 py-4">Result ID</th>
-                                    <th class="px-6 py-4">Party</th>
-                                    <th class="px-6 py-4">Score</th>
-                                    <th class="px-6 py-4">Entered By</th>
-                                    <th class="px-6 py-4">Date Entered</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 bg-white">
-                                @forelse ($entryRows as $row)
-                                    <tr class="text-slate-700">
-                                        <td class="px-6 py-4 font-medium text-slate-950">{{ $row->result_id }}</td>
-                                        <td class="px-6 py-4">{{ $row->party_abbreviation }}</td>
-                                        <td class="px-6 py-4">{{ number_format($row->party_score) }}</td>
-                                        <td class="px-6 py-4">{{ $row->entered_by_user ?: 'Not recorded' }}</td>
-                                        <td class="px-6 py-4">
-                                            {{ $row->date_entered ? \Illuminate\Support\Carbon::parse($row->date_entered)->format('d M Y, H:i') : 'Not recorded' }}
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="px-6 py-10 text-center text-slate-500">
-                                            There are no raw announced rows to display.
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </x-ui.table-shell>
+                    <div class="space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <div>
+                                <h3 class="text-lg font-semibold text-slate-950">Raw Announced Rows</h3>
+                                <p class="text-sm text-slate-600">Expand the original result rows to inspect the record history behind the summary.</p>
+                            </div>
+
+                            <button
+                                type="button"
+                                @click="showRawRows = !showRawRows"
+                                class="inline-flex items-center rounded-full border-2 border-indigo-300 bg-indigo-100 px-4 py-2 text-sm font-semibold text-indigo-900 transition hover:bg-indigo-200"
+                                x-text="showRawRows ? 'Hide raw rows' : 'Show raw rows'"
+                            ></button>
+                        </div>
+
+                        <div x-cloak x-show="showRawRows" x-transition.opacity.scale.origin.top>
+                            <x-ui.table-shell tone="indigo" class="animate__animated animate__fadeInUp">
+                                <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+                                    <thead class="bg-indigo-100/80">
+                                        <tr>
+                                            <th class="table-head-cell">Result ID</th>
+                                            <th class="table-head-cell">Party</th>
+                                            <th class="table-head-cell">Score</th>
+                                            <th class="table-head-cell">Entered By</th>
+                                            <th class="table-head-cell">Date Entered</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-100 bg-white">
+                                        @forelse ($entryRows as $row)
+                                            <tr class="text-slate-700">
+                                                <td class="table-body-cell font-medium text-slate-950">{{ $row->result_id }}</td>
+                                                <td class="table-body-cell">{{ $row->party_abbreviation }}</td>
+                                                <td class="table-body-cell">{{ number_format($row->party_score) }}</td>
+                                                <td class="table-body-cell">{{ $row->entered_by_user ?: 'Not recorded' }}</td>
+                                                <td class="table-body-cell">
+                                                    {{ $row->date_entered ? \Illuminate\Support\Carbon::parse($row->date_entered)->format('d M Y, H:i') : 'Not recorded' }}
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="5" class="px-6 py-10 text-center text-slate-500">
+                                                    There are no raw announced rows to display.
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </x-ui.table-shell>
+                        </div>
+                    </div>
                 @endif
             </div>
         </div>
