@@ -52,7 +52,7 @@
 
 @layer components {
     .palette-swatch {
-        @apply relative h-9 w-9 shrink-0 rounded-full border-2 border-white/85 shadow-sm shadow-slate-300/70 transition duration-300;
+        @apply relative h-9 w-9 shrink-0 cursor-pointer rounded-full border-2 border-white/85 shadow-sm shadow-slate-300/70 transition duration-300 hover:-translate-y-1 hover:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-200;
     }
 
     .pattern-badge {
